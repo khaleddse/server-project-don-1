@@ -1,5 +1,5 @@
 const mongoose=require('mongoose');
-const Schema=mongoose.schema;
+const Schema=mongoose.Schema;
 const personne=require('./personne.model');
 const Admin= new Schema({
     grade:{type:String , required: true ,trim: true,

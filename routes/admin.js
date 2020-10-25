@@ -1,12 +1,12 @@
-const router =require('express');
+const router =require('express').Router();
 let admin=require('../model/admin.model');
-router.get('/',(req,res)=>{
+router.route('/').get((req,res)=>{
     admin.find()
     .then(admin =>res.json(admin))
     .catch(err=>res.status(400).json('Error:'+err));
 
 });
-router.post('/add',(req,res)=>{
+router.route('/add').post((req,res)=>{
     const name=req.body.name;
     const prenom=req.body.prenom;
     const tel=Number(req.body.tel);
@@ -24,18 +24,18 @@ newadmin.save()
 .then(()=>res.json('Admin added'))
 .catch(err => res.status(400).json('Error: ' + err));
 });
-router.get('/:id',(req,res)=>{
+router.route('/:id').get((req,res)=>{
     admin.findById(req.params.id)
     .then(admin=>res.json(admin))
     .catch(err =>res.status(400).json('Error: ' + err));
 
 });
-router.delete('/:id',(req, res) => {
+router.route('/:id').delete((req, res) => {
     admin.findByIdAndDelete(req.params.id)
       .then(() => res.json('admin deleted.'))
       .catch(err => res.status(400).json('Error: ' + err));
   });
-  router.post('/update/:id',(req, res) => {
+  router.route('/update/:id').post((req, res) => {
    admin.findById(req.params.id)
       .then(admin => {
         admin.name = req.body.name;

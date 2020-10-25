@@ -14,8 +14,15 @@ connection.once('open', () => {
 })
 const AdminRouter = require('./routes/admin');
 const usersRouter = require('./routes/user');
+const annoncessRouter = require('./routes/annonce');
+const categsRouter = require('./routes/categorie');
+const subCategRouter = require('./routes/subcategorie');
+
 app.use('/admin', AdminRouter);
 app.use('/user', usersRouter);
+app.use('/annonce', annoncessRouter);
+app.use('/categorie', categsRouter);
+app.use('/subcategorie', subCategRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);

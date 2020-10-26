@@ -1,8 +1,10 @@
 const router = require('express').Router();
-const admin = require('../model/admin.model');
+const Admin = require('../model/admin.model');
+//const User = require('../model/user.model');
+//const Personne = require('../model/personne.model');
 
-router.route('/').get((req, res) => {
-    admin.find()
+router.get('/',(req, res) => {
+    Admin.find()
         .then(admin => res.json(admin))
         .catch(err => res.status(400).json('Error:' + err));
 
@@ -10,10 +12,10 @@ router.route('/').get((req, res) => {
 
 
 //creation user => user / Admin / superAdmin
-router.post('/add',(req, res) => {
+router.post('/add', (req, res) => {
     const { nom, prenom, tel, email, grade } = req.body
 
-    const newadmin = new admin({
+    const newadmin = new Admin({
         nom,
         prenom,
         tel: Number(tel),
@@ -22,61 +24,41 @@ router.post('/add',(req, res) => {
     });
 
     newadmin.save()
-        .then(createdUser => res.json({ message:'Admin added', admin: createdUser }))
+        .then(createdUser => res.json({ message: 'Admin added', admin: createdUser }))
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
 
 
 
-router.route('/:id').get((req, res) => {
-    admin.findById(req.params.id)
+router.get('/:id',(req, res) => {
+    Admin.findById(req.params.id)
         .then(admin => res.json(admin))
         .catch(err => res.status(400).json('Error: ' + err));
 
 });
-router.route('/delete/:id').delete((req, res) => {
-    admin.findByIdAndDelete(req.params.id)
+router.delete('/delete/:id',(req, res) => {
+    Amin.findByIdAndDelete(req.params.id)
         .then(() => res.json('admin deleted.'))
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
 
-router.route('/update/:id').post((req, res) => {
-    //Object Destructuring
-    const { id, name, prenom, tel, email, grade } = req.body
+router.post('/update/:id',(req, res) => {
+    const { id } = req.params
+    const { nom, prenom, tel, email, grade } = req.body
 
-    //create updatedAdmin
-    const updatedAdmin = {
-        name, prenom, tel, email, grade, Admin : {
-          grade
-        }
-    }
-    //2 update
-    admin.findOneAndUpdate({_id: id}, { $set: updatedAdmin }, { new: true })
+    const updatedAdmin = { nom, prenom, tel, email, grade }
+
+    Admin.findByIdAndUpdate(id, { $set: updatedAdmin }, { new: true })
         .then(updatedAdmin => {
-            console.log(updatedAdmin)
-            res.status(200).json({ message: 'admin updated!' })
+            res.status(200).json({ message: 'admin updated!', updatedAdmin })
         })
         .catch(err => res.status(400).json({ Error: err }));
-
-
-
-    // utiliser 
-    /* admin.findById(id)
-        .then(admin => {
-            admin.save()
-                .then(() => res.json('admin updated!'))
-                .catch(err => res.status(400).json('Error: ' + err));
-        })
-        .catch(err => res.status(400).json('Error: ' + err)); */
 });
 
-//Example
 
-router.get('/test/riadh', (req, res, next) => {
-    res.send('Hello from test Api')
-})
+
 module.exports = router;
 
 

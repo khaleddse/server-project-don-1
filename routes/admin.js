@@ -1,53 +1,69 @@
-const router =require('express').Router();
-let admin=require('../model/admin.model');
-router.route('/').get((req,res)=>{
-    admin.find()
-    .then(admin =>res.json(admin))
-    .catch(err=>res.status(400).json('Error:'+err));
+const router = require('express').Router();
+const Admin = require('../model/admin.model');
+//const User = require('../model/user.model');
+//const Personne = require('../model/personne.model');
+
+router.get('/',(req, res) => {
+    Admin.find()
+        .then(admin => res.json(admin))
+        .catch(err => res.status(400).json('Error:' + err));
 
 });
-router.route('/add').post((req,res)=>{
-    const name=req.body.name;
-    const prenom=req.body.prenom;
-    const tel=Number(req.body.tel);
-    const email=req.body.email;
-    const grade=req.body.grade;
 
-const newadmin= new admin({
-    name,
-    prenom,
-    tel,
-    email,
-    grade,
+
+//creation user => user / Admin / superAdmin
+router.post('/add', (req, res) => {
+    const { nom, prenom, tel, email, grade } = req.body
+
+    const newadmin = new Admin({
+        nom,
+        prenom,
+        tel: Number(tel),
+        email,
+        grade,
+    });
+
+    newadmin.save()
+        .then(createdUser => res.json({ message: 'Admin added', admin: createdUser }))
+        .catch(err => res.status(400).json('Error: ' + err));
 });
-newadmin.save()
-.then(()=>res.json('Admin added'))
-.catch(err => res.status(400).json('Error: ' + err));
-});
-router.route('/:id').get((req,res)=>{
-    admin.findById(req.params.id)
-    .then(admin=>res.json(admin))
-    .catch(err =>res.status(400).json('Error: ' + err));
+
+
+
+
+router.get('/:id',(req, res) => {
+    Admin.findById(req.params.id)
+        .then(admin => res.json(admin))
+        .catch(err => res.status(400).json('Error: ' + err));
 
 });
-router.route('/:id').delete((req, res) => {
-    admin.findByIdAndDelete(req.params.id)
-      .then(() => res.json('admin deleted.'))
-      .catch(err => res.status(400).json('Error: ' + err));
-  });
-  router.route('/update/:id').post((req, res) => {
-   admin.findById(req.params.id)
-      .then(admin => {
-        admin.name = req.body.name;
-        admin.prenom = req.body.prenom;
-        admin.tel = Number(req.body.tel);
-        admin.grade = req.body.grade;
-  
-        admin.save()
-          .then(() => res.json('admin updated!'))
-          .catch(err => res.status(400).json('Error: ' + err));
-      })
-      .catch(err => res.status(400).json('Error: ' + err));
-  });
-  
-  module.exports = router;
+router.delete('/delete/:id',(req, res) => {
+    Amin.findByIdAndDelete(req.params.id)
+        .then(() => res.json('admin deleted.'))
+        .catch(err => res.status(400).json('Error: ' + err));
+});
+
+
+router.post('/update/:id',(req, res) => {
+    const { id } = req.params
+    const { nom, prenom, tel, email, grade } = req.body
+
+    const updatedAdmin = { nom, prenom, tel, email, grade }
+
+    Admin.findByIdAndUpdate(id, { $set: updatedAdmin }, { new: true })
+        .then(updatedAdmin => {
+            res.status(200).json({ message: 'admin updated!', updatedAdmin })
+        })
+        .catch(err => res.status(400).json({ Error: err }));
+});
+
+
+
+module.exports = router;
+
+
+//les taches
+/*  1.refacto avec l'example
+    2.Async Await => promises
+    3.installation Prettier avec ESLINT
+*/

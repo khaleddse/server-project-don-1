@@ -1,17 +1,17 @@
 const express = require('express');
+const mongoDbConnect = require('./utils/db.js')
 const cors = require('cors');
 const mongoose = require('mongoose');
+
 require('dotenv').config();
+
 const app = express();
 const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
-const uri = "mongodb+srv://mern:mern123@cluster0.hascb.mongodb.net/<dbname>?retryWrites=true&w=majority";
-mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true });
-const connection = mongoose.connection;
-connection.once('open', () => {
-  console.log("MongoDB database connection established successfully");
-})
+
+
+
 const AdminRouter = require('./routes/admin');
 const usersRouter = require('./routes/user');
 const annoncessRouter = require('./routes/annonce');
@@ -24,6 +24,26 @@ app.use('/annonce', annoncessRouter);
 app.use('/categorie', categsRouter);
 app.use('/subcategorie', subCategRouter);
 
-app.listen(port, () => {
-  console.log(`Server is running on port: ${port}`);
-});
+
+
+const main = async () => {
+  try {
+    // learn Async Await => promises => callback
+    // mongodb => promise  => mongoDbConnect => promise 
+    const connection = await mongoDbConnect()
+    if (connection) {
+      console.log('db connected')
+      app.listen(port, () => {
+        console.log(`Server is running on port: ${port}`);
+      });
+    }
+  } catch (err) {
+    console.error(err)
+    throw err
+  }
+}
+
+main()
+
+
+

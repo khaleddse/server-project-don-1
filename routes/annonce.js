@@ -1,11 +1,9 @@
 const router = require('express').Router();
-const annonce = require('../model/annonce.model');
 let Annonce = require('../model/annonce.model');
-const subCateg = require('../model/subcategorie.model');
 let Subcateg = require('../model/subcategorie.model');
 
 //read all
-router.route('/').get((req, res) => {
+router.get('/',(req, res) => {
     Annonce.find()
     .then(annonces => res.json(annonces))
     .catch(err => res.status(400).json('Error: ' + err));
@@ -25,7 +23,7 @@ router.route('/').get((req, res) => {
 
   Subcateg.findById(req.params.id)
   .then(subCateg => {
-    subCateg.annonces.push(newAnnonce._id); 
+    subCateg.annonces.push(newAnnonce); 
    // subCateg.annonces.push(newAnnonce._id); 
 
     subCateg.save()
@@ -62,7 +60,8 @@ router.delete('/:id', (req, res) => {
         //2=>ba3ad ma nalgouh nfass5ou l id mta3 l annonce ml list des annoces mta3 sub categ
          Subcateg.findById(annonce.subCategID)
          .then(subCateg => {
-                             subCateg.annonces.splice(subCateg.annonces.indexOf(req.params.id,1));
+                             subCateg.annonces=subCateg.annonces.filter(el=>el._id!=req.params.id)
+                             
                               //3=> mba3ad nsajlou l subcateg 
                               subCateg.save()
                               .then(() => res.json('Sybcateg  updated!'))

@@ -3,7 +3,7 @@ let SubCateg = require('../model/subcategorie.model');
 let Categ = require('../model/categorie.model');
 
 //read all
-router.route('/').get((req, res) => {
+router.get('/',(req, res) => {
     SubCateg.find()
     .then(subCategs => res.json(subCategs))
     .catch(err => res.status(400).json('Error: ' + err));
@@ -11,14 +11,20 @@ router.route('/').get((req, res) => {
 
 //create annonce
   router.post('/add/:id', (req, res) => {
-  const name = req.body.name;
+  const {name} = req.body;
+ 
+  const categID=req.params.id;
+  
 
 
-  const newSubCateg = new SubCateg({name});
+  const newSubCateg = new SubCateg({
+    name,
+    categID
+  });
 
   Categ.findById(req.params.id)
   .then(categ => {
-    categ.subcategs.push(newSubCateg._id); 
+    categ.subcategs.push(newSubCateg); 
 
     categ.save()
       .then(() => res.json('categ  updated!'))
@@ -48,7 +54,8 @@ router.delete('/:id', (req, res) => {
           //2=>ba3ad ma nalgouh nfass5ou l id mta3 l subcateg ml list des subcateg mta3  categ
            Categ.findById(subcateg.categID)
            .then(categ => {
-                               categ.subcategs.splice(categ.subcategs.indexOf(req.params.id,1));
+            categ.subcategs=categ.subcategs.filter(el=>el._id!=req.params.id)
+                               //categ.subcategs.splice(categ.subcategs.indexOf(req.params.id,1));
                                 //3=> mba3ad nsajlou l categ 
                                 categ.save()
                                 .then(() => res.json('Categ  updated!'))

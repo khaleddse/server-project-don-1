@@ -67,9 +67,9 @@ router.delete('/:id', (req, res) => {
                               .then(() => res.json('Sybcateg  updated!'))
                               .catch(err => res.status(400).json('Error: ' + err));
                             }
-               );
-        }
-          );
+               ).catch(err => res.status(400).json('Error: ' + err));;
+        })
+      .catch(err => res.status(400).json(' Error: ' + err));;
     
 //4=>mba3ad nfas5ou l annonces
   Annonce.findByIdAndDelete(req.params.id)
@@ -86,12 +86,21 @@ router.post('/update/:id', (req, res) => {
   const { objet , detail } = req.body
 
   const updatedAnnonce = { objet , detail };
-
   Annonce.findByIdAndUpdate(id, { $set: updatedAnnonce }, { new: true })
-      .then(updatedAnnonce => {
-          res.status(200).json({ message: 'Annonce updated!', updatedAnnonce })
-      })
-      .catch(err => res.status(400).json({ Error: err }));
+  .then(updatedAnnonce => {
+            Subcateg.findById(updatedAnnonce.subCategID)
+                    .then(subcateg => {
+                      subcateg.annonces = subcateg.annonces.filter(el => el._id != req.params.id);
+                      subcateg.annonces.push(updatedAnnonce);
+
+                      subcateg.save()
+                              .then(() => res.json('Annonce + Subcateg  updated!'))
+                              .catch(err => res.status(400).json(' Subcateg update Error: ' + err));
+                                       });
+
+      res.status(200).json({ message: 'Annonce updated!', updatedAnnonce });
+  })
+  .catch(err => res.status(400).json(' Error: ' + err));
 
 
 });

@@ -84,7 +84,16 @@ router.post('/update/:id', (req, res) => {
 
   SubCateg.findByIdAndUpdate(id, { $set: updatedSubcateg }, { new: true })
       .then(updatedSubcateg => {
-          res.status(200).json({ message: 'Subcateg updated!', updatedSubcateg })
+          Categ.findById(updatedSubcateg.categID)
+                .then(categ => {
+                  categ.subcategs = categ.subcategs.filter(el => el._id != req.params.id);
+                  categ.subcategs.push(updatedSubcateg);
+
+                  categ.save()
+                          .then(() => res.json('categ  updated!'))
+                          .catch(err => res.status(400).json(' categ update Error: ' + err));
+                                   });
+          res.status(200).json({ message: 'Subcateg updated!', updatedSubcateg });
       })
       .catch(err => res.status(400).json({ Error: err }));
 

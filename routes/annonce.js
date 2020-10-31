@@ -10,15 +10,16 @@ router.get('/',(req, res) => {
 });
 
 //create annonce
-  router.post('/add/:id', (req, res) => {
+  router.post('/add/:id/:userid', (req, res) => {
   const { objet, detail } = req.body;
 
   subCategID=req.params.id;
-
+  userID=req.params.userid;
   const newAnnonce = new Annonce({
     objet,
     detail,
-    subCategID
+    subCategID,
+    userID
   });
 
   Subcateg.findById(req.params.id)
@@ -86,6 +87,12 @@ Annonce.find({ subCategID: req.params.id})
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
+//getall by user ID(retourner tous les annonce d'un utilisateurs specifique)
+router.get('/getAll/user/:id', (req, res) => {
+  Annonce.find({ userID: req.params.id})
+      .then(annonces => res.json(annonces))
+      .catch(err => res.status(400).json('Error: ' + err));
+  });
 
 //update annoce
 router.post('/update/:id', (req, res) => {
@@ -94,7 +101,6 @@ router.post('/update/:id', (req, res) => {
   const { objet , detail } = req.body
 
   const updatedAnnonce = { objet , detail };
-
 
   Annonce.findByIdAndUpdate(id, { $set: updatedAnnonce }, { new: true })
   .then(updatedAnnonce => {
@@ -112,5 +118,15 @@ router.post('/update/:id', (req, res) => {
   })
   .catch(err => res.status(400).json(' Error: ' + err));
 });
+
+//search by annonce.objet text
+router.post('/search/:text', (req, res) => {
+  text=req.params.text.trim();
+  //$option :"i" (insensitive to upper and lower case)
+Annonce.find({ objet: { "$regex":text ,"$options": "i"} })
+      .then(annonces => res.json(annonces))
+      .catch(err => res.status(400).json('Error: ' + err));
+});
+
 
 module.exports = router;

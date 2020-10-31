@@ -1,6 +1,7 @@
 const router = require('express').Router();
 let SubCateg = require('../model/subcategorie.model');
 let Categ = require('../model/categorie.model');
+const annonce = require('../model/annonce.model');
 
 //read all
 router.get('/',(req, res) => {
@@ -72,8 +73,14 @@ router.delete('/:id', (req, res) => {
   
   
   });
-  
-  
+    
+  //get by categ ID
+router.get('/getAll/categ/:id', (req, res) => {
+  SubCateg.find({ categID: req.params.id})
+      .then(subcategs => res.json(subcategs))
+      .catch(err => res.status(400).json('Error: ' + err));
+  });
+
 //update annoce
 router.post('/update/:id', (req, res) => {
 

@@ -79,6 +79,14 @@ router.delete('/:id', (req, res) => {
 
 });
 
+//get by subcategCateg ID
+router.get('/getAll/subcateg/:id', (req, res) => {
+Annonce.find({ subCategID: req.params.id})
+    .then(annonces => res.json(annonces))
+    .catch(err => res.status(400).json('Error: ' + err));
+});
+
+
 //update annoce
 router.post('/update/:id', (req, res) => {
 
@@ -86,6 +94,8 @@ router.post('/update/:id', (req, res) => {
   const { objet , detail } = req.body
 
   const updatedAnnonce = { objet , detail };
+
+
   Annonce.findByIdAndUpdate(id, { $set: updatedAnnonce }, { new: true })
   .then(updatedAnnonce => {
             Subcateg.findById(updatedAnnonce.subCategID)
@@ -101,8 +111,6 @@ router.post('/update/:id', (req, res) => {
       res.status(200).json({ message: 'Annonce updated!', updatedAnnonce });
   })
   .catch(err => res.status(400).json(' Error: ' + err));
-
-
 });
 
 module.exports = router;

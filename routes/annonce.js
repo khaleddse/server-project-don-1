@@ -1,43 +1,13 @@
 const router = require('express').Router();
 let Annonce = require('../model/annonce.model');
 let Subcateg = require('../model/subcategorie.model');
+const annonceController = require('../Controllers/annonceControllers')
 
-//read all
-router.get('/',(req, res) => {
-    Annonce.find()
-    .then(annonces => res.json(annonces))
-    .catch(err => res.status(400).json('Error: ' + err));
-});
 
-//create annonce
-  router.post('/add/:id', (req, res) => {
-  const { objet, detail } = req.body;
+router.get('/', annonceController.getAllAnnonces);
+router.post('/add/:id', annonceController.addAnnonce);
 
-  subCategID=req.params.id;
 
-  const newAnnonce = new Annonce({
-    objet,
-    detail,
-    subCategID
-  });
-
-  Subcateg.findById(req.params.id)
-  .then(subCateg => {
-    subCateg.annonces.push(newAnnonce); 
-   // subCateg.annonces.push(newAnnonce._id); 
-
-    subCateg.save()
-      .then(() => res.json('Sybcateg  updated!'))
-      .catch(err => res.status(400).json('Error: ' + err));
-  })
-  .catch(err => res.status(400).json('Error: ' + err));
-
-  newAnnonce.save()
-    .then(() => res.json('Annonce added!'))
-    .catch(err => res.status(400).json('Error: ' + err));
-});
-
-//Find by Id
 router.get('/:id', (req, res) => {
   Annonce.findById(req.params.id)
       .then(annonce => res.json(annonce))

@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const SubCateg = new Schema({
        name:{type:String,required:true},
-       annonces:[],
+       annonces:[{type: mongoose.Schema.Types.ObjectId, ref: "Annonces"}],
        categID:{type:String,required:false}
 });
 

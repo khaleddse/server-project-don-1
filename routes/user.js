@@ -1,26 +1,33 @@
 const router = require('express').Router();
 const User = require('../model/user.model');
-router.get('/',(req, res) => {
-    User.find()
-        .then(user => res.json(user))
-        .catch(err => res.status(400).json('Error:' + err));
 
+router.get('/', async (req, res) => {
+  try {
+    const users = await User.find()
+    res.status(200).json({ users })
+  } catch (err) {
+    res.status(400).json({ err })
+  }
 });
 
 //c'est bon testé
-router.post('/add', (req, res) => {
-    const { nom, prenom, tel, email } = req.body;
-    /** on crée une instance use  */
-    const newUser = new User({
-        nom,
-        prenom,
-        tel,
-        email,
-    });
-    /** ici on enregistre le user dans la base de données */
-    newUser.save()
-        .then(() => res.json('user added'))
-        .catch(err => res.status(400).json('Error: ' + err));
+router.post('/add', async (req, res) => {
+
+  const { nom, prenom, tel, email } = req.body;
+
+  const newUser = new User({
+      nom,
+      prenom,
+      tel,
+      email,
+  });
+
+ try{
+  const addedUser = await newUser.save()
+  res.status(200).json({addedUser, message: 'user Added'});
+} catch (err){
+  res.status(400).json({ err });
+}
 });
 
 // ! Refactoring

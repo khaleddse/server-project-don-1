@@ -38,7 +38,7 @@ router.get('/:id',(req, res) => {
 
 });
 router.delete('/delete/:id',(req, res) => {
-    Amin.findByIdAndDelete(req.params.id)
+    Admin.findByIdAndDelete(req.params.id)
         .then(() => res.json('admin deleted.'))
         .catch(err => res.status(400).json('Error: ' + err));
 });

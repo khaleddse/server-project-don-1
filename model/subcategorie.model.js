@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 
-const SubCateg = new Schema({
+const subcateg = new Schema({
        name:{type:String,required:true},
-       annonces:[],
+       annonces:[{type: mongoose.Schema.Types.ObjectId, ref: "Annonces"}],
        categID:{type:String,required:false}
 });
 
-const subCateg = mongoose.model('SubCateg', SubCateg);
+const SubCateg = mongoose.model('SubCateg', subcateg);
 
-module.exports = subCateg;
+module.exports = SubCateg;

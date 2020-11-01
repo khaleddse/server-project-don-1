@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const Admin = require('../model/admin.model');
-//const User = require('../model/user.model');
-//const Personne = require('../model/personne.model');
+
 
 router.get('/',(req, res) => {
     Admin.find()
@@ -11,7 +10,7 @@ router.get('/',(req, res) => {
 });
 
 
-//creation user => user / Admin / superAdmin
+
 router.post('/add', (req, res) => {
     const { nom, prenom, tel, email, grade } = req.body
 
@@ -38,7 +37,7 @@ router.get('/:id',(req, res) => {
 
 });
 router.delete('/delete/:id',(req, res) => {
-    Amin.findByIdAndDelete(req.params.id)
+    Admin.findByIdAndDelete(req.params.id)
         .then(() => res.json('admin deleted.'))
         .catch(err => res.status(400).json('Error: ' + err));
 });

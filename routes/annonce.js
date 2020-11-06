@@ -11,4 +11,6 @@ router.delete('/:id', annonceController.delteAnnonce);
 
 router.post('/update/:id',annonceController.UpDatedAnnonce);
 
+router.post('/searchbytext/:text',annonceController.SearchAnnonceByText);
+
 module.exports = router;

@@ -4,7 +4,7 @@ const adminController=require('../Controllers/adminController');
 
 router.get('/', adminController.getAllAdmins);
 
-router.post('/add/:id',adminController.addAdmin);
+router.post('/add',adminController.addAdmin);
 
 router.get('/:id',adminController.RechercheAdminbyId);
 

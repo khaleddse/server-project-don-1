@@ -46,8 +46,8 @@ exports.deleteCategories = async (req, res) => {
 
 exports.UpdateCategories = async (req, res) => {
     const { id } = req.params;
-    const { name } = req.body;
-    const updateCateg = { name };
+    const updateCateg =  req.body;
+
     try {
       /* Rst= */await Categ.findByIdAndUpdate(id, { $set: updateCateg }, { new: true })
        //if(Rst)  

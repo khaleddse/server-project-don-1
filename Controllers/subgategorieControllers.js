@@ -61,9 +61,9 @@ exports.RechercheSubParId= async(req, res) => {
 exports.UpDateSubcategorie= async (req, res) => {
 
     const { id } = req.params
-    const { name } = req.body
   
-    const updatedSubcateg = { name };
+    const updatedSubcateg = req.body
+
   try{
     //7atyt findByIdAndUpdate f Rst bch najam na3mal catch kanha raj3et null
     //5ater findByIdAndUpdate ki matlgach l Id traja3 null mch error

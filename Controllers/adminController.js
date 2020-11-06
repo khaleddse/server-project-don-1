@@ -58,9 +58,9 @@ exports.delteAdmin= async(req, res) => {
 exports.UpDateAdmin= async(req, res) => {
     try{
          const { id } = req.params
-         const { nom, prenom, tel, email, grade } = req.body
 
-         const updatedAdmin = { nom, prenom, tel, email, grade }
+         const updatedAdmin = req.body
+
 
          const admin=await Admin.findByIdAndUpdate(id, { $set: updatedAdmin }, { new: true })
         

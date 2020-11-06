@@ -1,5 +1,6 @@
 const Annonce = require('../model/annonce.model');
 const Subcateg = require('../model/subcategorie.model');
+const User = require('../model/user.model');
 
 exports.getAllAnnonces = async (req, res) => {
   const annonces = await Annonce.find()
@@ -16,10 +17,13 @@ exports.addAnnonce= async (req, res) => {
   });
  try{
   const Rst= await Subcateg.findById(req.params.id)
-  if(Rst){
+  const userRst=await User.findById(req.params.UserID)
+  if(Rst!= null && userRst !=null){
     const addedAnnonce = await newAnnonce.save()
     await Subcateg.findByIdAndUpdate(req.params.id, { $push: { annonces: addedAnnonce._id }})
-    res.status(200).json({message: 'Annonce Added !\n Subcateg updated !', addedAnnonce})
+    await User.findByIdAndUpdate(req.params.UserID, { $push: { annonces: addedAnnonce._id }})
+
+    res.status(200).json({message: 'Annonce Added ! Subcateg & User updated !', addedAnnonce})
   }else{ throw new Error("SubcategID or UserID undefined !") }
       
   } catch (err){
@@ -53,8 +57,8 @@ exports.RechercheParID=async (req, res) => {
 exports.UpDatedAnnonce = async (req, res) => {
 
   const { id } = req.params
-  const { objet , detail } = req.body
-  const updatedAnnonce = { objet , detail };
+  const updatedAnnonce =    req.body
+
 try{
      /*const Rst=*/await Annonce.findByIdAndUpdate(id, { $set: updatedAnnonce }, { new: true })   
     //  if(Rst)

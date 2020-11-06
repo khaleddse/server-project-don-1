@@ -4,7 +4,7 @@ const UserCatController=require('../Controllers/userController');
 
 router.get('/', UserCatController.getAllUsers);
 
-router.post('/add/:id',UserCatController.addUser);
+router.post('/add',UserCatController.addUser);
 
 router.get('/:id',UserCatController.FindUserById);
 

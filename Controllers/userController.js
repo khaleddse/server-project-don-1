@@ -4,7 +4,7 @@ const User = require('../model/user.model');
 
 exports.getAllUsers=async (req,res)=>{
     try{
-        const Users = await User.find().populate('user')
+        const Users = await User.find().populate('annonces')
         res.status(200).json({Users})
     } catch(err){
         res.status(400).json({err});
@@ -55,9 +55,9 @@ exports.deleteUser= async(req, res) => {
 exports.UpDateUser= async (req, res) => {
 
     const { id } = req.params
-    const { nom, prenom, tel, email } = req.body
+   
 
-    const updatedUser = { nom, prenom, tel, email };
+    const updatedUser = req.body
     try{
         const user=  await  User.findByIdAndUpdate(id, { $set: updatedUser }, { new: true })
         if(user)

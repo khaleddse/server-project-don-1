@@ -20,7 +20,7 @@ exports.addAnnonce= async (req, res) => {
     const addedAnnonce = await newAnnonce.save()
     await Subcateg.findByIdAndUpdate(req.params.id, { $push: { annonces: addedAnnonce._id }})
     res.status(200).json({message: 'Annonce Added !\n Subcateg updated !', addedAnnonce})
-  }else{ throw new Error("SubcategID undefined !") }
+  }else{ throw new Error("SubcategID or UserID undefined !") }
       
   } catch (err){
       res.status(400).json({ Error : err.message });

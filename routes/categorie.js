@@ -1,5 +1,3 @@
-const { get } = require('./subcategorie');
-
 const router = require('express').Router();
 const categorieControllers=require('../Controllers/categorieControllers');
 

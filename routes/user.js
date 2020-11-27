@@ -1,9 +1,9 @@
 const router = require('express').Router();
 const {body}=require('express-validator/check');
-const UserCatController=require('../Controllers/userController');
-const User = require('../model/user.model');
+const userController =require('../Controllers/userController');
+const { isAuth } = require('../middleware/auth');
 
-router.put('/signup',[ 
+/* router.put('/signup',[ 
     body('email').isEmail().withMessage('Please enter a valid').custom((value,{req})=>{
         return User.findOne({email:value}).then(userDoc =>{
             if (userDoc){
@@ -18,16 +18,21 @@ router.put('/signup',[
     .trim()
     .not()
     .isEmpty()
-],UserCatController.signup );
-router.post('/login',UserCatController.login);
-router.get('/', UserCatController.getAllUsers);
+],UserCatController.signup ); */
 
-router.post('/add',UserCatController.addUser);
+router.post('/login', userController.login);
+router.post('/signup', userController.signup);
 
-router.get('/:id',UserCatController.FindUserById);
+router.delete('/', isAuth, userController.deleteUser);
 
-router.delete('/:id',UserCatController.deleteUser);
 
-router.post('/update/:id',UserCatController.UpDateUser);
+ router.get('/', userController.getAllUsers);
+
+/*router.post('/add',userController.addUser);
+
+router.get('/:id',userController.FindUserById);*/
+
+
+router.post('/update/:id',userController.UpDateUser); 
 
 module.exports = router;

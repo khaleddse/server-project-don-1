@@ -3,6 +3,7 @@ const mongoDbConnect = require('./utils/db.js')
 const cors = require('cors');
 const mongoose = require('mongoose');
 
+
 require('dotenv').config();
 
 const app = express();
@@ -23,7 +24,6 @@ app.use('/user', usersRouter);
 app.use('/annonce', annoncessRouter);
 app.use('/categorie', categsRouter);
 app.use('/subcategorie', subCategRouter);
-
 
 
 const main = async () => {

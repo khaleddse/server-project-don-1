@@ -2,6 +2,16 @@ const User = require('../model/user.model');
 const { validationResult } = require('express-validator/check');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+
+
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'don.project2020@gmail.com',
+    pass: 'Mern@123',
+  },
+});
 
 exports.signup = async (req, res, next) => {
   try {
@@ -13,7 +23,10 @@ exports.signup = async (req, res, next) => {
       throw error;
     }
     const { nom, prenom, tel, email, password } = req.body;
-
+    const userDoc = await User.findOne({ email: email });
+    if (userDoc) {
+      return res.status(404).json({ message: 'email déja existe' });
+    }
     const hashedpw = await bcrypt.hash(password, 12);
     if (hashedpw) {
       const user = new User({
@@ -24,7 +37,23 @@ exports.signup = async (req, res, next) => {
         password: hashedpw,
       });
       const addedUser = await user.save();
+
       res.status(200).json({ message: 'User created', userId: addedUser._id });
+      transporter.sendMail(
+        {
+          from: 'youremail@gmail.com',
+          to: email,
+          subject: 'Sending Email using Node.js',
+          text: 'hello ' + nom + ' welcom to Najemn3awen',
+        },
+        function (error, info) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log('Email sent: ' + info.response);
+          }
+        }
+      );
     } else {
       return res.status(400).json({ message: 'mot de passe pas hashé' });
     }
@@ -63,7 +92,6 @@ exports.login = async (req, res, next) => {
       return res.status(400).json({ message: 'mot de passe incorrect' });
     }
   } catch (err) {
-    console.log(err);
     return res.status(400).json({ err });
   }
 };
@@ -86,7 +114,6 @@ exports.FindUserById = async (req, res) => {
   }
 };
 
-
 exports.deleteUser = async (req, res) => {
   console.log(req.userData);
   const { userId } = req.userData;
@@ -98,7 +125,6 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
-// ! Refactoring
 exports.UpDateUser = async (req, res) => {
   const { id } = req.params;
 

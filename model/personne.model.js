@@ -2,7 +2,7 @@ const mongoose=require('mongoose');
 const Schema=mongoose.Schema;
 
 const personneSchema= new Schema({
-    nom:{
+     nom:{
       type:String,
       required: true,
       trim: true,

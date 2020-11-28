@@ -1,71 +1,143 @@
-const router = require('express').Router();
 const User = require('../model/user.model');
+const { validationResult } = require('express-validator/check');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 
 
-exports.getAllUsers=async (req,res)=>{
-    try{
-        const Users = await User.find().populate('annonces')
-        res.status(200).json({Users})
-    } catch(err){
-        res.status(400).json({err});
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'don.project2020@gmail.com',
+    pass: 'Mern@123',
+  },
+});
+
+exports.signup = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const error = new Error('Validation failed.');
+      error.statusCode = 422;
+      error.data = errors.array();
+      throw error;
     }
-};
-//c'est bon testé
-exports.addUser= async (req, res) => {
+    const { nom, prenom, tel, email, password } = req.body;
+    const userDoc = await User.findOne({ email: email });
+    if (userDoc) {
+      return res.status(404).json({ message: 'email déja existe' });
+    }
+    const hashedpw = await bcrypt.hash(password, 12);
+    if (hashedpw) {
+      const user = new User({
+        nom: nom,
+        prenom: prenom,
+        tel: tel,
+        email: email,
+        password: hashedpw,
+      });
+      const addedUser = await user.save();
 
-  const { nom, prenom, tel, email } = req.body;
-
-  const newUser = new User({
-      nom,
-      prenom,
-      tel,
-      email,
-  });
-
- try{
-  const addedUser = await newUser.save()
-  res.status(200).json({addedUser, message: 'user Added'});
-} catch (err){
-  res.status(400).json({ err });
-}
-};
-
-// ! Refactoring
-exports.FindUserById= async (req, res) => {
-    try{
-         const admin=await User.findById(req.params.id)
-         res.json(admin)
-        
-    }catch(err){
-        res.status(400).json('Error: ' + err);
-      }  
-};
-
-// ! Refactoring
-exports.deleteUser= async(req, res) => {
-        try{
-          await User.findByIdAndDelete(req.params.id)
-           res.json('user deleted.')
-        } catch(err){
-            res.status(400).json('Error: ' + err);
-          } 
+      res.status(200).json({ message: 'User created', userId: addedUser._id });
+      transporter.sendMail(
+        {
+          from: 'youremail@gmail.com',
+          to: email,
+          subject: 'Sending Email using Node.js',
+          text: 'hello ' + nom + ' welcom to Najemn3awen',
+        },
+        function (error, info) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log('Email sent: ' + info.response);
+          }
+        }
+      );
+    } else {
+      return res.status(400).json({ message: 'mot de passe pas hashé' });
+    }
+  } catch (err) {
+    return res.status(400).json({ err });
+  }
 };
 
-// ! Refactoring
-exports.UpDateUser= async (req, res) => {
+exports.login = async (req, res, next) => {
+  const { email, password } = req.body;
 
-    const { id } = req.params
-   
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return res.status(401).json({ message: 'vous avez pas un compte!' });
+    }
 
-    const updatedUser = req.body
-    try{
-        const user=  await  User.findByIdAndUpdate(id, { $set: updatedUser }, { new: true })
-        if(user)
-        res.status(200).json({ message: 'User updated!', user })
-        else
-              throw new Error("User Undefined !")
-    } catch(err){
-                res.status(400).json({ Error: err.message });
-    } 
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (isMatch) {
+      const { _id, email, nom, prenom, tel } = user;
+      const payload = {
+        userId: _id,
+        email,
+        nom,
+        prenom,
+        tel,
+      };
+
+      const token = await jwt.sign(payload, 'don2020!', { expiresIn: 3600 });
+
+      if (token) {
+        res.status(200).json({ success: true, token: 'Bearer ' + token });
+      }
+    } else {
+      return res.status(400).json({ message: 'mot de passe incorrect' });
+    }
+  } catch (err) {
+    return res.status(400).json({ err });
+  }
 };
 
+exports.getAllUsers = async (req, res) => {
+  try {
+    const Users = await User.find().populate('annonces');
+    res.status(200).json({ Users });
+  } catch (err) {
+    res.status(400).json({ err });
+  }
+};
+
+exports.FindUserById = async (req, res) => {
+  try {
+    const admin = await User.findById(req.params.id);
+    res.status(200).json(admin);
+  } catch (err) {
+    res.status(400).json('Error: ' + err);
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  console.log(req.userData);
+  const { userId } = req.userData;
+  try {
+    await User.findByIdAndDelete(userId);
+    res.status(200).json({ message: 'user deleted.' });
+  } catch (err) {
+    res.status(400).json('Error: ' + err);
+  }
+};
+
+exports.UpDateUser = async (req, res) => {
+  const { id } = req.params;
+
+  const updatedUser = req.body;
+  try {
+    const user = await User.findByIdAndUpdate(
+      id,
+      { $set: updatedUser },
+      { new: true }
+    );
+    if (user) res.status(200).json({ message: 'User updated!', user });
+    else throw new Error('User Undefined !');
+  } catch (err) {
+    res.status(400).json({ Error: err.message });
+  }
+};

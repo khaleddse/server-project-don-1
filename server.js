@@ -17,16 +17,16 @@ const usersRouter = require('./routes/user');
 const annoncessRouter = require('./routes/annonce');
 const categsRouter = require('./routes/categorie');
 const subCategRouter = require('./routes/subcategorie');
+const avisRouter = require('./routes/avis');
 
 app.use('/admin', AdminRouter);
 app.use('/user', usersRouter);
 app.use('/annonce', annoncessRouter);
 app.use('/categorie', categsRouter);
 app.use('/subcategorie', subCategRouter);
+app.use('/avis', avisRouter);
 
-
-
-const main = async () => {
+ const main = async () => {
   try {
     // learn Async Await => promises => callback
     // mongodb => promise  => mongoDbConnect => promise 

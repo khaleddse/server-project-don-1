@@ -19,8 +19,6 @@ exports.addSubcategories = async (req, res) => {
   try {
     const Rst = await Categ.findById(req.params.id);
     if (Rst) {
-      //suppossant ID mta3 categ ghalet , l creation mta3 l subcateg tssir
-      //so lazmna nodhmnou enou fama categ bel ID eli 3adynah fl url
       const addedSubCategorie = await newSubCateg.save();
       await Categ.findByIdAndUpdate(req.params.id, {
         $push: { subcategs: addedSubCategorie._id },

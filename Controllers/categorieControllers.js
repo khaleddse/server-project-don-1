@@ -33,8 +33,11 @@ exports.RechercheCatParId = async (req, res) => {
 exports.deleteCategories = async (req, res) => {
   try {
     const Rst = await Categ.findByIdAndDelete(req.params.id);
-    if (Rst) res.json('Categorie deleted ');
-    else throw new Error('subCateg Undefined !');
+    if (Rst) {
+      res.json('Categorie deleted ');
+    } else {
+      throw new Error('subCateg Undefined !');
+    }
   } catch (err) {
     res.status(400).json('Error: ' + err);
   }
@@ -45,15 +48,16 @@ exports.UpdateCategories = async (req, res) => {
   const updateCateg = req.body;
 
   try {
-    /* Rst= */ await Categ.findByIdAndUpdate(
+    const Rst = await Categ.findByIdAndUpdate(
       id,
       { $set: updateCateg },
       { new: true }
     );
-    //if(Rst)
-    res.status(200).json({ message: 'Categorie updated !', updateCateg });
-    /* else
-            throw new Error("CategorieID undefined")*/
+    if (!Rst)
+      res.status(200).json({ message: 'Categorie updated !', updateCateg });
+    else {
+      throw new Error('CategorieID undefined');
+    }
   } catch (err) {
     res.status(400).json({ Error: err.message });
   }

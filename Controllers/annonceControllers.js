@@ -1,10 +1,17 @@
+const annonce = require('../model/annonce.model');
 const Annonce = require('../model/annonce.model');
 const Subcateg = require('../model/subcategorie.model');
 const User = require('../model/user.model');
 
 exports.getAllAnnonces = async (req, res) => {
-  const annonces = await Annonce.find();
-  res.status(200).json(annonces);
+  try {
+    const annonces = await Annonce.find();
+    if (annonces) {
+      res.status(200).json(annonces);
+    }
+  } catch (err) {
+    res.status(400).json({ Error: err.message });
+  }
 };
 
 exports.addAnnonce = async (req, res) => {
@@ -26,12 +33,10 @@ exports.addAnnonce = async (req, res) => {
         $push: { annonces: addedAnnonce._id },
       });
 
-      res
-        .status(200)
-        .json({
-          message: 'Annonce Added ! Subcateg & User updated !',
-          addedAnnonce,
-        });
+      res.status(200).json({
+        message: 'Annonce Added ! Subcateg & User updated !',
+        addedAnnonce,
+      });
     } else {
       throw new Error('SubcategID or UserID undefined !');
     }
@@ -63,15 +68,16 @@ exports.UpDatedAnnonce = async (req, res) => {
   const updatedAnnonce = req.body;
 
   try {
-    /*const Rst=*/ await Annonce.findByIdAndUpdate(
+    const Rst= await Annonce.findByIdAndUpdate(
       id,
       { $set: updatedAnnonce },
       { new: true }
     );
-    //  if(Rst)
+    if(Rst){
     await res.status(200).json({ message: 'Annonce updated!', updatedAnnonce });
-    // else
-    //    throw new Error("annonceID undefined !")
+    }else{
+      throw new Error("annonceID undefined !")
+  }
   } catch (err) {
     res.status(400).json({ Error: err.message });
   }

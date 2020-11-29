@@ -3,7 +3,7 @@ const Categ = require('../model/categorie.model');
 exports.getAllcategories = async (req, res) => {
   try {
     const categs = await Categ.find().populate('subcategs');
-    res.json(categs);
+    res.status(200).json(categs);
   } catch (err) {
     res.status(400).json('Error: ' + err);
   }
@@ -15,7 +15,7 @@ exports.addCategorie = async (req, res) => {
   const newcateg = new Categ({ nom });
   try {
     await newcateg.save();
-    res.json('Categorie added!');
+    res.status(200).json('Categorie added!');
   } catch (err) {
     res.status(400).json('Error: ' + err);
   }
@@ -24,7 +24,7 @@ exports.addCategorie = async (req, res) => {
 exports.RechercheCatParId = async (req, res) => {
   try {
     const Categories = await Categ.findById(req.params.id);
-    res.json(Categories);
+    res.status(200).json(Categories);
   } catch (err) {
     res.status(400).json('Error: ' + err);
   }
@@ -34,7 +34,7 @@ exports.deleteCategories = async (req, res) => {
   try {
     const Rst = await Categ.findByIdAndDelete(req.params.id);
     if (Rst) {
-      res.json('Categorie deleted ');
+      res.status(200).json('Categorie deleted ');
     } else {
       throw new Error('subCateg Undefined !');
     }

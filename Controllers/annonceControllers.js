@@ -68,16 +68,18 @@ exports.UpDatedAnnonce = async (req, res) => {
   const updatedAnnonce = req.body;
 
   try {
-    const Rst= await Annonce.findByIdAndUpdate(
+    const Rst = await Annonce.findByIdAndUpdate(
       id,
       { $set: updatedAnnonce },
       { new: true }
     );
-    if(Rst){
-    await res.status(200).json({ message: 'Annonce updated!', updatedAnnonce });
-    }else{
-      throw new Error("annonceID undefined !")
-  }
+    if (Rst) {
+      await res
+        .status(200)
+        .json({ message: 'Annonce updated!', updatedAnnonce });
+    } else {
+      throw new Error('annonceID undefined !');
+    }
   } catch (err) {
     res.status(400).json({ Error: err.message });
   }

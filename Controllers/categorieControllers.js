@@ -10,7 +10,7 @@ exports.getAllcategories = async (req, res) => {
 };
 
 exports.addCategorie = async (req, res) => {
-  const {nom} = req.body;
+  const { nom } = req.body;
 
   const newcateg = new Categ({ nom });
   try {

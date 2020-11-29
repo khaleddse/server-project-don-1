@@ -32,7 +32,7 @@ exports.addAvis = async (req, res) => {
 */
 
 exports.deleteAvis = async (req, res) => {
-    const { id } = req.params;
+  const { id } = req.params;
   try {
     const Rst = await Avis.findByIdAndDelete(id);
     if (!Rst) {

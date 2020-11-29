@@ -32,8 +32,9 @@ exports.addAvis = async (req, res) => {
 */
 
 exports.deleteAvis = async (req, res) => {
+    const { id } = req.params;
   try {
-    const Rst = await Avis.findByIdAndDelete(req.params.id);
+    const Rst = await Avis.findByIdAndDelete(id);
     if (!Rst) {
       res.status(400).json('Error: ' + err);
     }

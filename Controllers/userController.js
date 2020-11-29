@@ -4,7 +4,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 
-
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -126,12 +125,12 @@ exports.deleteUser = async (req, res) => {
 };
 
 exports.UpDateUser = async (req, res) => {
-  const { id } = req.params;
+  const { userId } = req.userData;
 
   const updatedUser = req.body;
   try {
     const user = await User.findByIdAndUpdate(
-      id,
+      userId,
       { $set: updatedUser },
       { new: true }
     );

@@ -10,9 +10,9 @@ exports.getAllcategories = async (req, res) => {
 };
 
 exports.addCategorie = async (req, res) => {
-  const name = req.body.name;
+  const {nom} = req.body;
 
-  const newcateg = new Categ({ name });
+  const newcateg = new Categ({ nom });
   try {
     await newcateg.save();
     res.json('Categorie added!');

@@ -30,7 +30,7 @@ const main = async () => {
     // mongodb => promise  => mongoDbConnect => promise
     const connection = await mongoDbConnect();
     if (connection) {
-      console.log('db connected');
+      console.log('db connecté');
       app.listen(port, () => {
         console.log(`Server is running on port: ${port}`);
       });

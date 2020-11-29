@@ -32,6 +32,6 @@ router.get('/', userController.getAllUsers);
 
 router.get('/:id',userController.FindUserById);*/
 
-router.post('/update/:id', userController.UpDateUser);
+router.post('/update', isAuth, userController.UpDateUser);
 
 module.exports = router;

@@ -12,9 +12,9 @@ exports.getAllSubcategorie = async (req, res) => {
 };
 
 exports.addSubcategories = async (req, res) => {
-  const { name } = req.body;
+  const { nom } = req.body;
   const newSubCateg = new SubCateg({
-    name,
+    nom,
   });
   try {
     const Rst = await Categ.findById(req.params.id);
@@ -63,7 +63,7 @@ exports.UpDateSubcategorie = async (req, res) => {
   const updatedSubcateg = req.body;
 
   try {
-    Rst = await SubCateg.findByIdAndUpdate(
+    const Rst = await SubCateg.findByIdAndUpdate(
       id,
       { $set: updatedSubcateg },
       { new: true }

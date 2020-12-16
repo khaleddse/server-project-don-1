@@ -1,18 +1,9 @@
-<<<<<<< HEAD
-const annonce = require("../model/annonce.model");
-const Annonce = require("../model/annonce.model");
-const Subcateg = require("../model/subcategorie.model");
-const User = require("../model/user.model");
-var fs = require("fs");
-var path = require("path");
-=======
 const annonce = require('../model/annonce.model');
 const Annonce = require('../model/annonce.model');
 const Subcateg = require('../model/subcategorie.model');
 const User = require('../model/user.model');
 var fs = require('fs');
 var path = require('path');
->>>>>>> 4ccd3d2e30383d413c645a072cab177cd64808d4
 
 exports.getAllAnnonces = async (req, res) => {
   try {
@@ -26,31 +17,6 @@ exports.getAllAnnonces = async (req, res) => {
 };
 
 exports.addAnnonce = async (req, res) => {
-<<<<<<< HEAD
-  const { objet, detail, adresse } = req.body;
-  const user = req.params.UserID;
-  console.log("--------------------------------------------------");
-  console.log("--------------------------------------------------");
-  console.log("req =", req.file);
-  console.log("--------------------------------------------------");
-  console.log("--------------------------------------------------");
-  try {
-    let image;
-    if (req.file) {
-      image = {
-        data: fs.readFileSync(path.join("." + "/uploads/" + req.file.filename)),
-        contentType: "image/png",
-      };
-    }
-    const newAnnonce = new Annonce({
-      objet,
-      detail,
-      adresse,
-      user,
-      image,
-    });
-
-=======
   const { objet, detail,adresse } = req.body;
   const user=req.params.UserID;
   console.log("--------------------------------------------------")
@@ -74,7 +40,6 @@ exports.addAnnonce = async (req, res) => {
     image
   });
  
->>>>>>> 4ccd3d2e30383d413c645a072cab177cd64808d4
     const Rst = await Subcateg.findById(req.params.id);
     const userRst = await User.findById(req.params.UserID);
     if (Rst != null && userRst != null) {

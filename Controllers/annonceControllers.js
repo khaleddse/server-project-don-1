@@ -2,6 +2,8 @@ const annonce = require("../model/annonce.model");
 const Annonce = require("../model/annonce.model");
 const Subcateg = require("../model/subcategorie.model");
 const User = require("../model/user.model");
+var fs = require("fs");
+var path = require("path");
 
 exports.getAllAnnonces = async (req, res) => {
   try {
@@ -15,13 +17,29 @@ exports.getAllAnnonces = async (req, res) => {
 };
 
 exports.addAnnonce = async (req, res) => {
-  const { objet, detail } = req.body;
-
-  const newAnnonce = new Annonce({
-    objet,
-    detail,
-  });
+  const { objet, detail, adresse } = req.body;
+  const user = req.params.UserID;
+  console.log("--------------------------------------------------");
+  console.log("--------------------------------------------------");
+  console.log("req =", req.file);
+  console.log("--------------------------------------------------");
+  console.log("--------------------------------------------------");
   try {
+    let image;
+    if (req.file) {
+      image = {
+        data: fs.readFileSync(path.join("." + "/uploads/" + req.file.filename)),
+        contentType: "image/png",
+      };
+    }
+    const newAnnonce = new Annonce({
+      objet,
+      detail,
+      adresse,
+      user,
+      image,
+    });
+
     const Rst = await Subcateg.findById(req.params.id);
     const userRst = await User.findById(req.params.UserID);
     if (Rst != null && userRst != null) {

@@ -1,16 +1,16 @@
-const router = require('express').Router();
-const annonceController = require('../Controllers/annonceControllers');
+const router = require("express").Router();
+const annonceController = require("../Controllers/annonceControllers");
 
-router.get('/', annonceController.getAllAnnonces);
+router.get("/", annonceController.getAllAnnonces);
 
-router.post('/add/:id/:UserID', annonceController.addAnnonce);
+router.post("/add/:id/:UserID", annonceController.addAnnonce);
 
-router.get('/:id', annonceController.RechercheParID);
+router.get("/:id", annonceController.RechercheParID);
 
-router.delete('/:id', annonceController.delteAnnonce);
+router.delete("/:id", annonceController.delteAnnonce);
 
-router.post('/update/:id', annonceController.UpDatedAnnonce);
+router.post("/update/:id", annonceController.UpDatedAnnonce);
 
-router.post('/searchbytext/:text', annonceController.SearchAnnonceByText);
+router.post("/searchbytext", annonceController.SearchAnnonceByText);
 
 module.exports = router;

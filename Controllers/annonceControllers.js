@@ -1,7 +1,7 @@
-const annonce = require('../model/annonce.model');
-const Annonce = require('../model/annonce.model');
-const Subcateg = require('../model/subcategorie.model');
-const User = require('../model/user.model');
+const annonce = require("../model/annonce.model");
+const Annonce = require("../model/annonce.model");
+const Subcateg = require("../model/subcategorie.model");
+const User = require("../model/user.model");
 
 exports.getAllAnnonces = async (req, res) => {
   try {
@@ -34,11 +34,11 @@ exports.addAnnonce = async (req, res) => {
       });
 
       res.status(200).json({
-        message: 'Annonce Added ! Subcateg & User updated !',
+        message: "Annonce Added ! Subcateg & User updated !",
         addedAnnonce,
       });
     } else {
-      throw new Error('SubcategID or UserID undefined !');
+      throw new Error("SubcategID or UserID undefined !");
     }
   } catch (err) {
     res.status(400).json({ Error: err.message });
@@ -47,8 +47,8 @@ exports.addAnnonce = async (req, res) => {
 exports.delteAnnonce = async (req, res) => {
   try {
     rst = await Annonce.findByIdAndDelete(req.params.id);
-    if (rst) res.status(200).json('Annonce deleted.');
-    else throw new Error('Annonce Undefined !');
+    if (rst) res.status(200).json("Annonce deleted.");
+    else throw new Error("Annonce Undefined !");
   } catch (err) {
     res.status(400).json({ Error: err.message });
   }
@@ -76,9 +76,9 @@ exports.UpDatedAnnonce = async (req, res) => {
     if (Rst) {
       await res
         .status(200)
-        .json({ message: 'Annonce updated!', updatedAnnonce });
+        .json({ message: "Annonce updated!", updatedAnnonce });
     } else {
-      throw new Error('annonceID undefined !');
+      throw new Error("annonceID undefined !");
     }
   } catch (err) {
     res.status(400).json({ Error: err.message });
@@ -88,7 +88,7 @@ exports.UpDatedAnnonce = async (req, res) => {
 exports.SearchAnnonceByText = async (req, res) => {
   text = req.params.text.trim();
   const annonces = await Annonce.find({
-    objet: { $regex: text, $options: 'i' },
+    objet: { $regex: text, $options: "i" },
   });
   res.status(200).json(annonces);
 };

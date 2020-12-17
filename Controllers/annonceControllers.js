@@ -17,14 +17,17 @@ exports.getAllAnnonces = async (req, res) => {
 };
 
 exports.addAnnonce = async (req, res) => {
-  const { objet, detail,adresse } = req.body;
-  const user=req.params.UserID;
+  const { objet, detail,adresse ,telephone} = req.body;
+  
+  
   console.log("--------------------------------------------------")
   console.log("--------------------------------------------------")
   console.log("req =",req.file)
   console.log("--------------------------------------------------")
   console.log("--------------------------------------------------")
   try {
+    const userRst = await User.findById(req.params.UserID);
+    const user=userRst.nom +" "+userRst.prenom
     let image;
     if(req.file){
  image= {
@@ -36,12 +39,12 @@ exports.addAnnonce = async (req, res) => {
     objet,
     detail,
     adresse,
+    telephone,
     user,
     image
   });
  
     const Rst = await Subcateg.findById(req.params.id);
-    const userRst = await User.findById(req.params.UserID);
     if (Rst != null && userRst != null) {
       const addedAnnonce = await newAnnonce.save();
       await Subcateg.findByIdAndUpdate(req.params.id, {

@@ -6,10 +6,14 @@ var Annonce = new Schema({
   detail: { type: String ,trim: true},
   adresse:{type:String ,trim: true},
   user:{ type: String},
+  telephone:{ type: String},
   image: {
     data: Buffer,
     contentType: String
 }
+},
+{
+  timestamps: true,
 });
 
 var annonce = mongoose.model('Annonces', Annonce);

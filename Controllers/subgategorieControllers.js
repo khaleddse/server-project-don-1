@@ -23,9 +23,7 @@ exports.addSubcategories = async (req, res) => {
       await Categ.findByIdAndUpdate(req.params.id, {
         $push: { subcategs: addedSubCategorie._id },
       });
-      res
-        .status(200)
-        .json({ message: 'categorie updated!', addedSubCategorie });
+      res.status(200).json({ message: 'categorie updated!', addedSubCategorie });
     } else {
       throw new Error('categ undefined !');
     }
@@ -41,7 +39,7 @@ exports.delteSubcategories = async (req, res) => {
     if (Rst == null) {
       throw new Error('subCateg Undefined !');
     } else {
-      res.json('Subcateg deleted.');
+      res.status(200).json('Subcateg deleted.');
     }
   } catch (err) {
     res.status(400).json('Error: ' + err);
@@ -51,7 +49,7 @@ exports.delteSubcategories = async (req, res) => {
 exports.RechercheSubParId = async (req, res) => {
   try {
     const subcateg = await SubCateg.findById(req.params.id);
-    res.json(subcateg);
+    res.status(200).json(subcateg);
   } catch (err) {
     res.status(400).json('Error: ' + err);
   }

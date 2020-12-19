@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 var Annonce = new Schema({
@@ -16,6 +16,6 @@ var Annonce = new Schema({
   timestamps: true,
 });
 
-var annonce = mongoose.model('Annonces', Annonce);
+var annonce = mongoose.model("Annonces", Annonce);
 
 module.exports = annonce;

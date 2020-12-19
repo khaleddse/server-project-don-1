@@ -85,7 +85,7 @@ exports.login = async (req, res, next) => {
       const token = await jwt.sign(payload, 'don2020!', { expiresIn: 3600 });
 
       if (token) {
-        res.status(200).json({ success: true, token: 'Bearer ' + token });
+        res.status(200).json({ success: true, token: 'Bearer ' + token ,UserId:_id });
       }
     } else {
       return res.status(400).json({ message: 'mot de passe incorrect' });

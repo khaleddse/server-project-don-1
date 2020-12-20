@@ -7,10 +7,7 @@ var Annonce = new Schema({
   adresse:{type:String ,trim: true},
   user:{ type: String},
   telephone:{ type: String},
-  image: {
-    data: Buffer,
-    contentType: String
-}
+  image:{ type: String},
 },
 {
   timestamps: true,

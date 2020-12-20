@@ -4,7 +4,7 @@ const annonce = require('../model/annonce.model');
 
 exports.getAllSubcategorie = async (req, res) => {
   try {
-    const subCategories = await SubCateg.find().populate('annonces');
+    const subCategories = await SubCateg.find()//.populate('annonces');
     res.status(200).json({ subCategories });
   } catch (err) {
     res.status(400).json({ err });

@@ -34,19 +34,10 @@ const AvisRouter = require('./routes/avis');
 var storage = multer.diskStorage({
   destination: (req, file, cb) => {
       cb(null, 'uploads')
-  },
-  filename: (req, file, cb) => {
-      cb(null, file.fieldname + '-' + Date.now())
   }
 });
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype == 'image/jpeg' || file.mimetype == 'image/png') {
-      cb(null, true);
-  } else {
-      cb(null, false);
-  }
-}
-const upload = multer({ storage: storage, fileFilter: fileFilter });
+
+const upload = multer({ storage: storage});
 const addAnnonceCtrl=router.post('/:id/:UserID', upload.single('image'), annonceController.addAnnonce);
 //Fin block
 

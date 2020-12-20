@@ -17,24 +17,11 @@ exports.getAllAnnonces = async (req, res) => {
 };
 
 exports.addAnnonce = async (req, res) => {
-  const { objet, detail,adresse ,telephone} = req.body;
+  const { objet, image,detail,adresse ,telephone} = req.body;
   
-  
-  console.log("--------------------------------------------------")
-  console.log("--------------------------------------------------")
-  console.log("req =",req.file)
-  console.log("--------------------------------------------------")
-  console.log("--------------------------------------------------")
-  try {
+  try { 
     const userRst = await User.findById(req.params.UserID);
     const user=userRst.nom +" "+userRst.prenom
-    let image;
-    if(req.file){
- image= {
-  data: fs.readFileSync(path.join('.' + '/uploads/' + req.file.filename)),
-  contentType: 'image/png'
-}
-}
   const newAnnonce = new Annonce({
     objet,
     detail,
@@ -43,7 +30,6 @@ exports.addAnnonce = async (req, res) => {
     user,
     image
   });
- 
     const Rst = await Subcateg.findById(req.params.id);
     if (Rst != null && userRst != null) {
       const addedAnnonce = await newAnnonce.save();

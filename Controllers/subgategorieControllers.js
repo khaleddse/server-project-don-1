@@ -48,7 +48,7 @@ exports.delteSubcategories = async (req, res) => {
 
 exports.RechercheSubParId = async (req, res) => {
   try {
-    const subcateg = await SubCateg.findById(req.params.id);
+    const subcateg = await SubCateg.findById(req.params.id).populate('annonces');
     res.status(200).json(subcateg);
   } catch (err) {
     res.status(400).json('Error: ' + err);

@@ -28,9 +28,9 @@ router.delete('/', isAuth, userController.deleteUser);
 
 router.get('/', userController.getAllUsers);
 
-/*router.post('/add',userController.addUser);
+/*router.post('/add',userController.addUser);*/
 
-router.get('/:id',userController.FindUserById);*/
+router.get('/:id',userController.FindUserById);
 
 router.post('/update', isAuth, userController.UpDateUser);
 

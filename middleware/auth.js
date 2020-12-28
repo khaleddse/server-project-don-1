@@ -13,6 +13,8 @@ exports.isAuth = (req, res, next) => {
     req.userData = decode;
     next();
   } catch (err) {
-    res.status(400).json({ err });
+    res
+      .status(400)
+      .json({ err: new Error('vous etes pas autorisé pour cette opération') });
   }
 };

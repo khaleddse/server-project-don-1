@@ -4,7 +4,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 
-
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -86,7 +85,7 @@ exports.login = async (req, res, next) => {
       const token = await jwt.sign(payload, 'don2020!', { expiresIn: 3600 });
 
       if (token) {
-        res.status(200).json({ success: true, token: 'Bearer ' + token });
+        res.status(200).json({ success: true, token: 'Bearer ' + token ,UserId:_id });
       }
     } else {
       return res.status(400).json({ message: 'mot de passe incorrect' });
@@ -126,12 +125,12 @@ exports.deleteUser = async (req, res) => {
 };
 
 exports.UpDateUser = async (req, res) => {
-  const { id } = req.params;
+  const { userId } = req.userData;
 
   const updatedUser = req.body;
   try {
     const user = await User.findByIdAndUpdate(
-      id,
+      userId,
       { $set: updatedUser },
       { new: true }
     );

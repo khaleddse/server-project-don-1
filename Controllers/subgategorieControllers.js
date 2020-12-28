@@ -4,7 +4,7 @@ const annonce = require('../model/annonce.model');
 
 exports.getAllSubcategorie = async (req, res) => {
   try {
-    const subCategories = await SubCateg.find().populate('annonces');
+    const subCategories = await SubCateg.find()//.populate('annonces');
     res.status(200).json({ subCategories });
   } catch (err) {
     res.status(400).json({ err });
@@ -12,9 +12,9 @@ exports.getAllSubcategorie = async (req, res) => {
 };
 
 exports.addSubcategories = async (req, res) => {
-  const { name } = req.body;
+  const { nom } = req.body;
   const newSubCateg = new SubCateg({
-    name,
+    nom,
   });
   try {
     const Rst = await Categ.findById(req.params.id);
@@ -23,9 +23,7 @@ exports.addSubcategories = async (req, res) => {
       await Categ.findByIdAndUpdate(req.params.id, {
         $push: { subcategs: addedSubCategorie._id },
       });
-      res
-        .status(200)
-        .json({ message: 'categorie updated!', addedSubCategorie });
+      res.status(200).json({ message: 'categorie updated!', addedSubCategorie });
     } else {
       throw new Error('categ undefined !');
     }
@@ -41,7 +39,7 @@ exports.delteSubcategories = async (req, res) => {
     if (Rst == null) {
       throw new Error('subCateg Undefined !');
     } else {
-      res.json('Subcateg deleted.');
+      res.status(200).json('Subcateg deleted.');
     }
   } catch (err) {
     res.status(400).json('Error: ' + err);
@@ -50,8 +48,8 @@ exports.delteSubcategories = async (req, res) => {
 
 exports.RechercheSubParId = async (req, res) => {
   try {
-    const subcateg = await SubCateg.findById(req.params.id);
-    res.json(subcateg);
+    const subcateg = await SubCateg.findById(req.params.id).populate('annonces');
+    res.status(200).json(subcateg);
   } catch (err) {
     res.status(400).json('Error: ' + err);
   }
@@ -63,7 +61,7 @@ exports.UpDateSubcategorie = async (req, res) => {
   const updatedSubcateg = req.body;
 
   try {
-    Rst = await SubCateg.findByIdAndUpdate(
+    const Rst = await SubCateg.findByIdAndUpdate(
       id,
       { $set: updatedSubcateg },
       { new: true }

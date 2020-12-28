@@ -4,7 +4,7 @@ const Admin = require('../model/admin.model');
 exports.getAllAdmins = async (req, res) => {
   try {
     const admins = await Admin.find();
-    res.json(admins);
+    res.status(200).json(admins);
   } catch (err) {
     res.status(400).json('Error: ' + err);
   }
@@ -22,7 +22,10 @@ exports.addAdmin = async (req, res) => {
   });
   try {
     const admin = await newadmin.save();
-    res.json({ message: 'Admin added', admin });
+    if(!admin){
+      throw new Error("cannot add admin !")
+    }
+    res.status(200).json({ message: 'Admin added', admin });
   } catch (err) {
     res.status(400).json({ Error: err.message });
   }
@@ -31,7 +34,7 @@ exports.addAdmin = async (req, res) => {
 exports.RechercheAdminbyId = async (req, res) => {
   try {
     const admin = await Admin.findById(req.params.id);
-    res.json(admin);
+    res.status(200).json(admin);
   } catch (err) {
     res.status(400).json('Error: ' + err);
   }
@@ -40,7 +43,7 @@ exports.RechercheAdminbyId = async (req, res) => {
 exports.delteAdmin = async (req, res) => {
   try {
     await Admin.findByIdAndDelete(req.params.id);
-    res.json('admin deleted.');
+    res.status(200).json('admin deleted.');
   } catch (err) {
     res.status(400).json('Error: ' + err);
   }

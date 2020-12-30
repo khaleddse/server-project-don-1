@@ -1,5 +1,12 @@
 const Avis = require('../model/avis.model');
-
+const nodemailer = require('nodemailer');
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'don.project2020@gmail.com',
+    pass: 'Mern@123',
+  },
+});
 exports.getAllAvis = async (req, res) => {
   try {
     const aviss = await Avis.find();
@@ -15,6 +22,28 @@ exports.addAvis = async (req, res) => {
   const newavis = new Avis({ email, detail });
   try {
     await newavis.save();
+    transporter.sendMail(
+      {
+        from: 'don.project2020@gmail.com',
+        to: email,
+        subject: 'Merci de NajemN3awen',
+        text: "Bonjour Monsieur/Madame  \n\n  Merci a vous pour nous donner un peu de votre temp, votre message a été bien reçue."+
+        "\n Un de nos agents vous contactera le plus tôt possible pour plus de détails."+
+        " \n\n Bonne journée  \n Equipe NajemN3awen \n\n NajemN3awen.com ",
+        attachments: [{
+          filename: 'logo.png',
+          path: './logo.PNG',
+          cid: 'Logo' 
+     }]
+      },
+      function (error, info) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      }
+    );
     res.status(200).json('avis added!');
   } catch (err) {
     res.status(400).json('Error: ' + err);

@@ -9,9 +9,9 @@ exports.getAllAnnonces = async (req, res) => {
   try {
     const annonces = await Annonce.find().populate('user');
     const annoncesRST=annonces.map((annonce)=>{
-     const  {objet,detail, image,telephone,adresse,createdAt}=annonce;
+     const  {objet,detail, image,telephone,adresse,createdAt,_id}=annonce;
      const user = annonce.user.nom + " "+annonce.user.prenom 
-      return {objet,detail, image,telephone,adresse,user,createdAt}
+      return {objet,detail, image,telephone,adresse,user,createdAt,_id}
     })
     if (annoncesRST) {
       res.status(200).json(annoncesRST);

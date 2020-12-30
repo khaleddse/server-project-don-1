@@ -11,6 +11,7 @@ exports.isAuth = (req, res, next) => {
         .json({ message: "vous etes pas autorisé pour cette opération" });
     }
     req.userData = decode;
+    console.log("decode ",decode)
     next();
   } catch (err) {
     res

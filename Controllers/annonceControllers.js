@@ -9,7 +9,6 @@ exports.getAllAnnonces = async (req, res) => {
   try {
     const annonces = await Annonce.find().populate('user');
     const annoncesRST=annonces.map((annonce)=>{
-      console.log(annonce)
      const  {objet,detail, image,telephone,adresse,createdAt}=annonce;
      const user = annonce.user.nom + " "+annonce.user.prenom 
       return {objet,detail, image,telephone,adresse,user,createdAt}

@@ -7,9 +7,15 @@ var path = require('path');
 
 exports.getAllAnnonces = async (req, res) => {
   try {
-    const annonces = await Annonce.find();
-    if (annonces) {
-      res.status(200).json(annonces);
+    const annonces = await Annonce.find().populate('user');
+    const annoncesRST=annonces.map((annonce)=>{
+      console.log(annonce)
+     const  {objet,detail, image,telephone,adresse,createdAt}=annonce;
+     const user = annonce.user.nom + " "+annonce.user.prenom 
+      return {objet,detail, image,telephone,adresse,user,createdAt}
+    })
+    if (annoncesRST) {
+      res.status(200).json(annoncesRST);
     }
   } catch (err) {
     res.status(400).json({ Error: err.message });
@@ -21,7 +27,7 @@ exports.addAnnonce = async (req, res) => {
   
   try { 
     const userRst = await User.findById(req.params.UserID);
-    const user=userRst.nom +" "+userRst.prenom
+    user=req.params.UserID;
   const newAnnonce = new Annonce({
     objet,
     detail,
@@ -42,7 +48,7 @@ exports.addAnnonce = async (req, res) => {
 
       res.status(200).json({
         message: "Annonce Added ! Subcateg & User updated !",
-        addedAnnonce,
+        addedAnnonce
       });
     } else {
       throw new Error("SubcategID or UserID undefined !");
@@ -63,7 +69,7 @@ exports.delteAnnonce = async (req, res) => {
 
 exports.RechercheParID = async (req, res) => {
   try {
-    const annonce = await Annonce.findById(req.params.id);
+    const annonce = await Annonce.findById(req.params.id).populate('user');
     res.status(200).json({ annonce });
   } catch (err) {
     res.status(400).json(err);

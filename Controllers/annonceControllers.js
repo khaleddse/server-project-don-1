@@ -7,6 +7,7 @@ var path = require("path");
 
 exports.getAllAnnonces = async (req, res) => {
   try {
+
     const annonces = await Annonce.find().populate("user");
     const annoncesRST = annonces.map((annonce) => {
       const {
@@ -31,6 +32,7 @@ exports.getAllAnnonces = async (req, res) => {
         subcategid,
       };
     });
+
     if (annoncesRST) {
       res.status(200).json(annoncesRST);
     }

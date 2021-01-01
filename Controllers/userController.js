@@ -133,14 +133,24 @@ exports.UpDateUser = async (req, res) => {
   const updatedUser = { nom, prenom, tel, email, grade: "user" };
   const playload = { nom, prenom, tel, email, grade: "user", userId };
   try {
-    await User.findByIdAndUpdate(userId, { $set: updatedUser }, { new: true });
 
-    const token = await jwt.sign(playload, "don2020!", {
+    const user=await User.findByIdAndUpdate(userId, { $set: updatedUser }, { new: true });
+    const { _id, email, nom, prenom, tel } = user;
+    const payload = {
+      userId: _id,
+      email,
+      nom,
+      prenom,
+      tel,
+      grade: "user",
+    };
+    const token = await jwt.sign(payload, "don2020!", {
+
       expiresIn: 3600,
     });
     res
       .status(200)
-      .json({ message: "User updated!", token: "Bearer " + token });
+      .json({ message: "User updated!", token: "Bearer " + token, UserId: _id});
   } catch (err) {
     res.status(400).json({ Error: err.message });
   }

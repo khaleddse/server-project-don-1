@@ -131,10 +131,11 @@ exports.UpDateUser = async (req, res) => {
   const { userId } = req.userData;
   const { nom, prenom, tel, email } = req.body;
   const updatedUser = { nom, prenom, tel, email, grade: "user" };
+  const playload = { nom, prenom, tel, email, grade: "user", userId };
   try {
     await User.findByIdAndUpdate(userId, { $set: updatedUser }, { new: true });
 
-    const token = await jwt.sign(updatedUser, "don2020!", {
+    const token = await jwt.sign(playload, "don2020!", {
       expiresIn: 3600,
     });
     res

@@ -117,7 +117,6 @@ exports.FindUserById = async (req, res) => {
 };
 
 exports.deleteUser = async (req, res) => {
-  console.log(req.userData);
   const { userId } = req.userData;
   try {
     await User.findByIdAndDelete(userId);
@@ -131,7 +130,6 @@ exports.UpDateUser = async (req, res) => {
   const { userId } = req.userData;
   const { nom, prenom, tel, email } = req.body;
   const updatedUser = { nom, prenom, tel, email, grade: "user" };
-  const playload = { nom, prenom, tel, email, grade: "user", userId };
   try {
 
     const user=await User.findByIdAndUpdate(userId, { $set: updatedUser }, { new: true });

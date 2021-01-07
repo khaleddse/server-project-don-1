@@ -11,6 +11,7 @@ exports.getAllAnnonces = async (req, res) => {
     const annonces = await Annonce.find().populate("user");
     const annoncesRST = annonces.map((annonce) => {
       const {
+        _id,
         objet,
         detail,
         image,
@@ -22,6 +23,7 @@ exports.getAllAnnonces = async (req, res) => {
       //const user = annonce.user.nom + " " + annonce.user.prenom;
       const user = annonce.user;
       return {
+        _id,
         objet,
         detail,
         image,

@@ -1,18 +1,14 @@
-const router = require('express').Router();
-const annonceController = require('../Controllers/annonceControllers');
-const Annonce = require('../model/annonce.model');
-const Subcateg = require('../model/subcategorie.model');
-const User = require('../model/user.model');
+const router = require("express").Router();
+const annonceController = require("../Controllers/annonceControllers");
+const { isAuth } = require("../middleware/auth");
 
- 
-router.get('/', annonceController.getAllAnnonces);
-
+router.get("/", annonceController.getAllAnnonces);
 
 //router.post('/add/:id/:UserID', upload.single('image'), addAnnonce);
 
 router.get("/:id", annonceController.RechercheParID);
 
-router.delete("/:id", annonceController.delteAnnonce);
+router.delete("/:id", isAuth, annonceController.delteAnnonce);
 
 router.post("/update/:id", annonceController.UpDatedAnnonce);
 

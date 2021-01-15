@@ -100,7 +100,7 @@ exports.login = async (req, res, next) => {
 
 exports.getAllUsers = async (req, res) => {
   try {
-    const Users = await User.find().populate("annonces");
+    const Users = await User.find();
     res.status(200).json({ Users });
   } catch (err) {
     res.status(400).json({ err });
@@ -131,8 +131,11 @@ exports.UpDateUser = async (req, res) => {
   const { nom, prenom, tel, email } = req.body;
   const updatedUser = { nom, prenom, tel, email, grade: "user" };
   try {
-
-    const user=await User.findByIdAndUpdate(userId, { $set: updatedUser }, { new: true });
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $set: updatedUser },
+      { new: true }
+    );
     const { _id, email, nom, prenom, tel } = user;
     const payload = {
       userId: _id,
@@ -143,12 +146,13 @@ exports.UpDateUser = async (req, res) => {
       grade: "user",
     };
     const token = await jwt.sign(payload, "don2020!", {
-
       expiresIn: 3600,
     });
-    res
-      .status(200)
-      .json({ message: "User updated!", token: "Bearer " + token, UserId: _id});
+    res.status(200).json({
+      message: "User updated!",
+      token: "Bearer " + token,
+      UserId: _id,
+    });
   } catch (err) {
     res.status(400).json({ Error: err.message });
   }

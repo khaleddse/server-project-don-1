@@ -1,5 +1,5 @@
 const User = require("../model/user.model");
-const Annonce =require("../model/annonce.model")
+const Annonce = require("../model/annonce.model");
 const { validationResult } = require("express-validator/check");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -120,12 +120,12 @@ exports.FindUserById = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   const userId = req.params.id;
   try {
-    const user=await User.findById(userId).populate("annonces");
-    
-    await user.annonces.map(async(annonce)=>{
-      const ok=await Annonce.findByIdAndDelete(annonce._id)
+    const user = await User.findById(userId);
+
+    await user.annonces.map(async (annonce) => {
+      const ok = await Annonce.findByIdAndDelete(annonce);
       return ok;
-    })
+    });
     await User.findByIdAndDelete(userId);
     res.status(200).json({ message: "user deleted." });
   } catch (err) {

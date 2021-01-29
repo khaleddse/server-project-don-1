@@ -1,8 +1,12 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const personne = require('./personne.model');
+const personne = require("./personne.model");
 
 const Admin = new Schema({
+  password: {
+    type: String,
+    required: true,
+  },
   grade: {
     type: String,
     required: true,
@@ -11,6 +15,6 @@ const Admin = new Schema({
   },
 });
 
-const admin = personne.discriminator('Admin', Admin);
+const admin = personne.discriminator("Admin", Admin);
 
 module.exports = admin;

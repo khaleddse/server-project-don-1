@@ -1,5 +1,6 @@
 const Admin = require("../model/admin.model");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 exports.getAllAdmins = async (req, res) => {
   try {
@@ -54,18 +55,31 @@ exports.delteAdmin = async (req, res) => {
 };
 
 exports.UpDateAdmin = async (req, res) => {
+  const { adminId } = req.userData;
+  const { nom, prenom, tel, email } = req.body;
+  const updatedAdmin = { nom, prenom, tel, email };
   try {
-    const { id } = req.params;
-
-    const updatedAdmin = req.body;
-
     const admin = await Admin.findByIdAndUpdate(
-      id,
+      adminId,
       { $set: updatedAdmin },
       { new: true }
     );
-
-    res.status(200).json({ message: "admin updated!", admin });
+    const { _id, email, nom, prenom, tel, grade } = admin;
+    const payload = {
+      adminId: _id,
+      email,
+      nom,
+      prenom,
+      tel,
+      grade,
+    };
+    const token = await jwt.sign(payload, "don2020!", {
+      expiresIn: 3600,
+    });
+    res.status(200).json({
+      message: "Admin updated!",
+      token: "Bearer " + token,
+    });
   } catch (err) {
     res.status(400).json({ Error: err.message });
   }

@@ -1,14 +1,15 @@
-const router = require('express').Router();
-const adminController = require('../Controllers/adminController');
+const router = require("express").Router();
+const adminController = require("../Controllers/adminController");
+const { isAuth } = require("../middleware/auth");
 
-router.get('/', adminController.getAllAdmins);
+router.get("/", adminController.getAllAdmins);
 
-router.post('/add', adminController.addAdmin);
+router.post("/add", adminController.addAdmin);
 
-router.get('/:id', adminController.RechercheAdminbyId);
+router.get("/:id", adminController.RechercheAdminbyId);
 
-router.delete('/:id', adminController.delteAdmin);
+router.delete("/:id", adminController.delteAdmin);
 
-router.post('/update/:id', adminController.UpDateAdmin);
+router.post("/update", isAuth, adminController.UpDateAdmin);
 
 module.exports = router;

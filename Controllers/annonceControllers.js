@@ -1,15 +1,42 @@
-const annonce = require('../model/annonce.model');
-const Annonce = require('../model/annonce.model');
-const Subcateg = require('../model/subcategorie.model');
-const User = require('../model/user.model');
-var fs = require('fs');
-var path = require('path');
+const annonce = require("../model/annonce.model");
+const Annonce = require("../model/annonce.model");
+const Subcateg = require("../model/subcategorie.model");
+const User = require("../model/user.model");
+var fs = require("fs");
+var path = require("path");
 
 exports.getAllAnnonces = async (req, res) => {
   try {
-    const annonces = await Annonce.find();
-    if (annonces) {
-      res.status(200).json(annonces);
+
+    const annonces = await Annonce.find().populate("user");
+    const annoncesRST = annonces.map((annonce) => {
+      const {
+        _id,
+        objet,
+        detail,
+        image,
+        telephone,
+        adresse,
+        createdAt,
+        subcategid,
+      } = annonce;
+      //const user = annonce.user.nom + " " + annonce.user.prenom;
+      const user = annonce.user;
+      return {
+        _id,
+        objet,
+        detail,
+        image,
+        telephone,
+        adresse,
+        user,
+        createdAt,
+        subcategid,
+      };
+    });
+
+    if (annoncesRST) {
+      res.status(200).json(annoncesRST);
     }
   } catch (err) {
     res.status(400).json({ Error: err.message });
@@ -17,19 +44,21 @@ exports.getAllAnnonces = async (req, res) => {
 };
 
 exports.addAnnonce = async (req, res) => {
-  const { objet, image,detail,adresse ,telephone} = req.body;
-  
-  try { 
+  const { objet, image, detail, adresse, telephone } = req.body;
+
+  try {
     const userRst = await User.findById(req.params.UserID);
-    const user=userRst.nom +" "+userRst.prenom
-  const newAnnonce = new Annonce({
-    objet,
-    detail,
-    adresse,
-    telephone,
-    user,
-    image
-  });
+    user = req.params.UserID;
+    subcategid = req.params.id;
+    const newAnnonce = new Annonce({
+      objet,
+      detail,
+      adresse,
+      telephone,
+      user,
+      image,
+      subcategid,
+    });
     const Rst = await Subcateg.findById(req.params.id);
     if (Rst != null && userRst != null) {
       const addedAnnonce = await newAnnonce.save();
@@ -63,7 +92,7 @@ exports.delteAnnonce = async (req, res) => {
 
 exports.RechercheParID = async (req, res) => {
   try {
-    const annonce = await Annonce.findById(req.params.id);
+    const annonce = await Annonce.findById(req.params.id).populate("user");
     res.status(200).json({ annonce });
   } catch (err) {
     res.status(400).json(err);

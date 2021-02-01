@@ -1,7 +1,15 @@
 const Admin = require("../model/admin.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 
+var transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "don.project2020@gmail.com",
+    pass: "Mern@123",
+  },
+});
 exports.getAllAdmins = async (req, res) => {
   try {
     const admins = await Admin.find();
@@ -80,6 +88,30 @@ exports.UpDateAdmin = async (req, res) => {
       message: "Admin updated!",
       token: "Bearer " + token,
     });
+  } catch (err) {
+    res.status(400).json({ Error: err.message });
+  }
+};
+
+exports.RepondeAvis = async (req, res) => {
+  const { email, message } = req.body;
+  try {
+    transporter.sendMail(
+      {
+        from: "youremail@gmail.com",
+        to: email,
+        subject: "Repondre avis ",
+        text: message,
+      },
+      function (error, info) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("Email sent: " + info.response);
+        }
+      }
+    );
+    return res.status(200).json({ message: "email envoyée avec succes" });
   } catch (err) {
     res.status(400).json({ Error: err.message });
   }
